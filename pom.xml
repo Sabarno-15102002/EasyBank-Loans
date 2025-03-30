@@ -94,6 +94,9 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<image>
+						<name>sabarnobiswas2002/${project.artifactId}:v0.0.1</name>
+					</image>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -106,3 +109,5 @@
 	</build>
 
 </project>
+
+<!-- Docker image: mvn spring-boot:build-image -->
