@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>17</java.version>
+		<spring-cloud.version>2024.0.1</spring-cloud.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -47,6 +48,14 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-config</artifactId>
+    </dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bus-amqp</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -76,6 +85,18 @@
 		</dependency>
 	</dependencies>
 
+	<dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -91,19 +112,14 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<image>
-						<name>sabarnobiswas2002/${project.artifactId}:v0.0.1</name>
-					</image>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
+					<groupId>com.google.cloud.tools</groupId>
+					<artifactId>jib-maven-plugin</artifactId>
+					<version>3.4.2</version>
+					<configuration>
+							<to>
+									<image>sabarnobiswas2002/${project.artifactId}:v0.0.1</image>
+							</to>
+					</configuration>
 			</plugin>
 		</plugins>
 	</build>
