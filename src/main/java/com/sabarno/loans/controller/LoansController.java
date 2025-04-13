@@ -1,5 +1,7 @@
 package com.sabarno.loans.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +41,7 @@ import jakarta.validation.constraints.Pattern;
 @Validated
 public class LoansController {
 
+        private static final Logger logger = LoggerFactory.getLogger(LoansController.class);
         private ILoansService iLoansService;
 
         public LoansController(ILoansService iLoansService) {
@@ -73,8 +77,9 @@ public class LoansController {
                         @ApiResponse(responseCode = "500", description = "HTTP Status Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
         })
         @GetMapping("/fetch")
-        public ResponseEntity<LoansDto> fetchLoanDetails(
+        public ResponseEntity<LoansDto> fetchLoanDetails(@RequestHeader("eazybank-correlation-id") String correlationId,
                         @RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits") String mobileNumber) {
+                logger.debug("eazyBank-correlation-id found: {} ", correlationId);
                 LoansDto loansDto = iLoansService.fetchLoan(mobileNumber);
                 return ResponseEntity.status(HttpStatus.OK).body(loansDto);
         }
@@ -122,80 +127,40 @@ public class LoansController {
                 }
         }
 
-        @Operation(
-                summary = "Get Build information",
-                description = "Get Build information that is deployed into cards microservice"
-        )
+        @Operation(summary = "Get Build information", description = "Get Build information that is deployed into cards microservice")
         @ApiResponses({
-                @ApiResponse(
-                        responseCode = "200",
-                        description = "HTTP Status OK"
-                ),
-                @ApiResponse(
-                        responseCode = "500",
-                        description = "HTTP Status Internal Server Error",
-                        content = @Content(
-                                schema = @Schema(implementation = ErrorResponseDto.class)
-                        )
-                )
-        }
-        )
+                        @ApiResponse(responseCode = "200", description = "HTTP Status OK"),
+                        @ApiResponse(responseCode = "500", description = "HTTP Status Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+        })
         @GetMapping("/build-info")
         public ResponseEntity<String> getBuildInfo() {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(buildVersion);
+                return ResponseEntity
+                                .status(HttpStatus.OK)
+                                .body(buildVersion);
         }
-    
-        @Operation(
-                summary = "Get Java version",
-                description = "Get Java versions details that is installed into cards microservice"
-        )
+
+        @Operation(summary = "Get Java version", description = "Get Java versions details that is installed into cards microservice")
         @ApiResponses({
-                @ApiResponse(
-                        responseCode = "200",
-                        description = "HTTP Status OK"
-                ),
-                @ApiResponse(
-                        responseCode = "500",
-                        description = "HTTP Status Internal Server Error",
-                        content = @Content(
-                                schema = @Schema(implementation = ErrorResponseDto.class)
-                        )
-                )
-        }
-        )
+                        @ApiResponse(responseCode = "200", description = "HTTP Status OK"),
+                        @ApiResponse(responseCode = "500", description = "HTTP Status Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+        })
         @GetMapping("/java-version")
         public ResponseEntity<String> getJavaVersion() {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(environment.getProperty("JAVA_HOME"));
+                return ResponseEntity
+                                .status(HttpStatus.OK)
+                                .body(environment.getProperty("JAVA_HOME"));
         }
-    
-        @Operation(
-                summary = "Get Contact Info",
-                description = "Contact Info details that can be reached out in case of any issues"
-        )
+
+        @Operation(summary = "Get Contact Info", description = "Contact Info details that can be reached out in case of any issues")
         @ApiResponses({
-                @ApiResponse(
-                        responseCode = "200",
-                        description = "HTTP Status OK"
-                ),
-                @ApiResponse(
-                        responseCode = "500",
-                        description = "HTTP Status Internal Server Error",
-                        content = @Content(
-                                schema = @Schema(implementation = ErrorResponseDto.class)
-                        )
-                )
-        }
-        )
+                        @ApiResponse(responseCode = "200", description = "HTTP Status OK"),
+                        @ApiResponse(responseCode = "500", description = "HTTP Status Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+        })
         @GetMapping("/contact-info")
         public ResponseEntity<LoansContactInfoDto> getContactInfo() {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(loansContactInfoDto);
+                return ResponseEntity
+                                .status(HttpStatus.OK)
+                                .body(loansContactInfoDto);
         }
-    
 
 }
