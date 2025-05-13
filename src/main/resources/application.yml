@@ -59,7 +59,7 @@ info:
   app:
     name: "loans"
     description: "Eazy Bank Loans Application"
-    version: "1.3.0"
+    version: "1.4.0"
 
 logging:
   level:
