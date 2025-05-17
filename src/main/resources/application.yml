@@ -59,12 +59,12 @@ info:
   app:
     name: "loans"
     description: "Eazy Bank Loans Application"
-    version: "1.4.0"
+    version: "1.5.0"
 
 logging:
   level:
     com:
-      eazybytes:
+      sabarnobiswas2002:
         loans: DEBUG
   pattern:
     level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
